@@ -542,6 +542,20 @@ class PHPMailer
     protected $exceptions = false;
 
     /**
+     * Whether or not to log the disposition of a message
+     * @type boolean
+    **/
+
+    protected $log_disposition = false;
+
+    /**
+     * The path where we are going to put our email disposition logs
+     *
+    **/
+
+    protected $log_path = realpath("~") . '/log/email-disposition.log';
+
+    /**
      * Error severity: message only, continue processing
      */
     const STOP_MESSAGE = 0;
@@ -1266,6 +1280,8 @@ class PHPMailer
             return true;
         }
 
+        $this->smtp->log_disposition = $this->log_disposition;
+        $this->smtp->log_path = $this->
         $this->smtp->setTimeout($this->Timeout);
         $this->smtp->setDebugLevel($this->SMTPDebug);
         $this->smtp->setDebugOutput($this->Debugoutput);

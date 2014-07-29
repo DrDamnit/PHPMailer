@@ -144,6 +144,20 @@ class SMTP
      */
     protected $last_reply = '';
 
+    /** 
+     * Toggles the logging of the DATA command when set to true
+     * @type boolean
+    **/
+
+    protected $log_disposition = false;
+
+    /**
+     * Holds the path to the log file where dispositions are kept.
+     * @type string
+    **/
+
+    protected $log_path = '';
+
     /**
      * Output debugging info via a user-selected method.
      * @param string $str Debug string to output
@@ -690,6 +704,11 @@ class SMTP
         $reply = $this->get_lines();
         $code = substr($reply, 0, 3);
 
+        if($command=='DATA' && $this->log_disposition)
+        {
+            $this->logDisposition($reply);
+        }
+
         if ($this->do_debug >= 2) {
             $this->edebug('SERVER -> CLIENT: ' . $reply);
         }
@@ -937,5 +956,22 @@ class SMTP
     public function getTimeout()
     {
         return $this->Timeout;
+    }
+
+    /** 
+     * Log disposition
+     * @return boolean
+    **/
+
+    public function logDisposition($reply)
+    {
+        if($this->log_path == '')
+            return false;
+        $h = fopen($this->log_path,'a');
+        $now = date("Y-m-d H:i:s");
+        $data = sprintf("%s\t%s",$now,$reply);
+        fwrite($h,$data);
+        fclose($h);
+        return true;
     }
 }
