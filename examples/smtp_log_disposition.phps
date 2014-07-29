@@ -22,11 +22,11 @@ $mail->isSMTP();
 // 1 = client messages
 // 2 = client and server messages
 // Has been set to 0 to show that logging is independent of debugging.
-$mail->SMTPDebug = 2;
+$mail->SMTPDebug = 0;
 //Ask for HTML-friendly debug output
 $mail->Debugoutput = 'text';
 //Set the hostname of the mail server
-$mail->Host = "mail.highpoweredhelp.com";
+$mail->Host = "mail.example.com";
 //Set the SMTP port number - likely to be 25, 465 or 587
 $mail->Port = 25;
 //Set who the message is to be sent from

@@ -149,14 +149,14 @@ class SMTP
      * @type boolean
     **/
 
-    protected $log_disposition = false;
+    public $log_disposition = false;
 
     /**
      * Holds the path to the log file where dispositions are kept.
      * @type string
     **/
 
-    protected $log_path = '';
+    public $log_path = '';
 
     /**
      * Output debugging info via a user-selected method.
@@ -704,13 +704,15 @@ class SMTP
         $reply = $this->get_lines();
         $code = substr($reply, 0, 3);
 
-        if($command=='DATA' && $this->log_disposition)
-        {
-            $this->logDisposition($reply);
-        }
 
         if ($this->do_debug >= 2) {
             $this->edebug('SERVER -> CLIENT: ' . $reply);
+        }
+
+        // $this->logDisposition("[$command\t$commandstring]" . self::CRLF);
+        if($this->log_disposition && ($command == 'RCPT TO' || $commandstring=='.'))
+        {
+            $this->logDisposition($commandstring . " -> " . $reply);
         }
 
         if (!in_array($code, (array)$expect)) {
@@ -727,7 +729,7 @@ class SMTP
             }
             return false;
         }
-
+        //$this->logDisposition($reply);
         $this->last_reply = $reply;
         $this->error = array();
         return true;
@@ -966,7 +968,10 @@ class SMTP
     public function logDisposition($reply)
     {
         if($this->log_path == '')
+	{
+		echo "Log path is blank";
             return false;
+	}
         $h = fopen($this->log_path,'a');
         $now = date("Y-m-d H:i:s");
         $data = sprintf("%s\t%s",$now,$reply);

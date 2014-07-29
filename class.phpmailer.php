@@ -553,7 +553,7 @@ class PHPMailer
      *
     **/
 
-    protected $log_path = realpath("~") . '/log/email-disposition.log';
+    protected $log_path = '';
 
     /**
      * Error severity: message only, continue processing
@@ -677,6 +677,16 @@ class PHPMailer
     public function isSMTP()
     {
         $this->Mailer = 'smtp';
+    }
+
+    /**
+     * Turns on disposition logging
+     * @return void
+     */
+
+    public function logDisposition()
+    {
+	    $this->log_disposition = true;
     }
 
     /**
@@ -809,6 +819,17 @@ class PHPMailer
             }
         }
         return false;
+    }
+
+    /**
+     * Set the log path
+     * @return boolean
+     */
+
+    public function setLogPath($path)
+    {
+	    $this->log_path = $path;
+        return true;
     }
 
     /**
@@ -1281,7 +1302,7 @@ class PHPMailer
         }
 
         $this->smtp->log_disposition = $this->log_disposition;
-        $this->smtp->log_path = $this->
+        $this->smtp->log_path = $this->log_path;
         $this->smtp->setTimeout($this->Timeout);
         $this->smtp->setDebugLevel($this->SMTPDebug);
         $this->smtp->setDebugOutput($this->Debugoutput);
